@@ -1,0 +1,13 @@
+{
+  "name": "430-http-api-assignment",
+  "version": "1.0.0",
+  "description": "Server exercise for HTTP API.",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests Completed!\""
+  },
+  "author": "Conor Race",
+  "license": "UNLICENSED"
+}
