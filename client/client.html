@@ -5,7 +5,81 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
+    const handleResponse = async (response, parseResponse) => {
+      let responseText = await response.text();
+      console.log(responseText);
 
+      const contentType = response.statusText;
+      const content = document.querySelector('#content');
+      content.innerHTML = '';
+
+      const statusHeader = document.createElement('h1');
+      const statusMessage = document.createElement('p');
+
+      switch (response.status){
+        case 200:
+          statusHeader.appendChild(document.createTextNode('Success'));
+          break;
+        case 400:
+          statusHeader.appendChild(document.createTextNode('Bad Request'));
+          break;
+        case 401:
+          statusHeader.appendChild(document.createTextNode('Unauthorized'));
+          break;
+        case 403:
+          statusHeader.appendChild(document.createTextNode('Forbidden'));
+          break;
+        case 500:
+          statusHeader.appendChild(document.createTextNode('Internal Server Error'));
+          break;
+        case 501:
+          statusHeader.appendChild(document.createTextNode('Not Implemented'));
+          break;
+        case 404:
+          statusHeader.appendChild(document.createTextNode('Resource Not Found'));
+          break;
+        default:
+          statusHeader.appendChild(document.createTextNode('Status Code Not Implemented'));
+          break;
+      }
+
+      if(contentType === 'text/xml') {
+        let parsedXML = new window.DOMParser().parseFromString(responseText, 'text/xml');
+        let message = parsedXML.querySelector('message').textContent;
+        statusMessage.appendChild(document.createTextNode(`Message: ${message}`));
+      } else if (contentType === 'application/json') {
+        let parsedData = JSON.parse(responseText);
+        let message = parsedData.message;
+        statusMessage.appendChild(document.createTextNode(`Message: ${message}`));
+      }
+
+      content.appendChild(statusHeader);
+      content.appendChild(statusMessage);
+    };
+
+    const requestUpdate = async (url, acceptedHeader) => {
+      const options = {
+        method: 'GET',
+        headers: {
+          'Accept': acceptedHeader
+        }
+      };
+
+      const response = await fetch(url, options);
+      handleResponse(response);
+    };
+
+    const init = () => {
+      const sendBtn = document.querySelector('#send');
+
+      sendBtn.addEventListener('click', () => {
+        const urlValue = document.querySelector('#page').value;
+        const headerValue = document.querySelector('#type').value;
+        requestUpdate(urlValue, headerValue)
+      });
+    };
+
+    window.onload = init;
   </script>
 </head>
 <body>

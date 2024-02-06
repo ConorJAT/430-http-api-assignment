@@ -50,6 +50,6 @@ const onRequest = (request, response) => {
   } else {
     methodHandler[parsedURL.pathname].notFound(request, response, acceptedHeaders);
   }
-}
+};
 
 http.createServer(onRequest).listen(port, () => { console.log(`Listening on 127.0.0.1:${port}`); });
