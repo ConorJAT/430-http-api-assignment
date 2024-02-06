@@ -5,17 +5,24 @@
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script>
-    const handleResponse = async (response, parseResponse) => {
+    // HandleResponse - Use the data retrieved and display text accordingly.
+    const handleResponse = async (response) => {
+      // 1. - Retrieve raw response text and display to console.
       let responseText = await response.text();
       console.log(responseText);
 
+      // 2. - Retrieve content type that was returned.
       const contentType = response.statusText;
+
+      // 3. - Retrieve content element on page and set it to empty.
       const content = document.querySelector('#content');
       content.innerHTML = '';
 
+      // 4. - Create new h1 and p tags for display.
       const statusHeader = document.createElement('h1');
       const statusMessage = document.createElement('p');
 
+      // 5. - Using the status code, alter the h1 to match the code's meaning.
       switch (response.status){
         case 200:
           statusHeader.appendChild(document.createTextNode('Success'));
@@ -43,6 +50,7 @@
           break;
       }
 
+      // 6. - Parse data based off the returned content type.
       if(contentType === 'text/xml') {
         let parsedXML = new window.DOMParser().parseFromString(responseText, 'text/xml');
         let message = parsedXML.querySelector('message').textContent;
@@ -53,10 +61,12 @@
         statusMessage.appendChild(document.createTextNode(`Message: ${message}`));
       }
 
+      // 7. - Append both the h1 and p elements to the content section.
       content.appendChild(statusHeader);
       content.appendChild(statusMessage);
     };
 
+    // RequestUpdate - Send an async fetch request and call handleResponse() when data is retrieved.
     const requestUpdate = async (url, acceptedHeader) => {
       const options = {
         method: 'GET',
@@ -69,9 +79,11 @@
       handleResponse(response);
     };
 
+    // Init - Upon window load completion, set up the button event listener for data retrieval.
     const init = () => {
       const sendBtn = document.querySelector('#send');
 
+      // Every time button is clicked, retrieve current information.
       sendBtn.addEventListener('click', () => {
         const urlValue = document.querySelector('#page').value;
         const headerValue = document.querySelector('#type').value;
