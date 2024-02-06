@@ -46,7 +46,7 @@ const onRequest = (request, response) => {
 
   const handlerFunc = methodHandler[parsedURL.pathname];
   if (handlerFunc) {
-    handlerFunc(request, response, acceptedHeaders, params); 
+    handlerFunc(request, response, acceptedHeaders, params);
   } else {
     methodHandler[parsedURL.pathname].notFound(request, response, acceptedHeaders);
   }
